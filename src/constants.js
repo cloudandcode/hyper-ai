@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+// API key for OpenAI.
+exports.API_KEY = process.env.API_KEY;
+
 // Action that includes user entered data.
 exports.SESSION_USER_DATA = 'SESSION_USER_DATA';
 

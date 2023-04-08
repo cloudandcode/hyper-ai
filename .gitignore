@@ -19,3 +19,6 @@ node_modules/
 dist/
 build/
 tmp/https://username@github.com/your-username/your-repository.git
+
+# Environment
+.env

@@ -1,9 +1,10 @@
+
 const { OpenAI } = require('langchain/llms');
 const { PromptTemplate } = require('langchain/prompts');
 const { LLMChain } = require('langchain/chains');
+const { API_KEY } = require('./constants');
 
 // Constants. Pull these from Hyper config.
-const API_KEY = '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';
 const ENGINE = 'text-davinci-003';
 
 const openai = new OpenAI({
