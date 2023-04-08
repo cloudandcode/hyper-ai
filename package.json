@@ -23,6 +23,7 @@
     "xterm": "^5.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.37.0"
+    "eslint": "^8.37.0",
+    "typescript": "^5.0.4"
   }
 }
