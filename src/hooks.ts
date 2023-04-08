@@ -4,9 +4,9 @@
  * @param {Object} options - The app config options
  * @param {Object} options.config - The app configuration object
  */
-export const onApp = ({ config }) => {
+export const onApp = (app) => {
   console.log('HYPER-AI ON APP STARTUP');
-  console.log('CONFIG', config);
+  console.log('CONFIG', app.config);
 };
 
 /**

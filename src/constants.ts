@@ -5,8 +5,9 @@ dotenv.config({
   path: path.resolve(__dirname, '../.env'),
 });
 
-// API key for OpenAI.
-export const OPEN_API_KEY = process.env.OPEN_API_KEY;
+// OpenAI constants
+export const OPEN_AI_KEY = process.env.OPEN_AI_KEY;
+export const OPEN_AI_MODEL = 'text-davinci-003';  
 
 // Action that includes user entered data.
 export const SESSION_USER_DATA = 'SESSION_USER_DATA';

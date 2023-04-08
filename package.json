@@ -19,13 +19,12 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.3",
-    "langchain": "^0.0.49",
     "openai": "^3.2.1",
     "xterm": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
     "eslint": "^8.37.0",
-    "typescript": "^5.0.4"
+    "typescript": "^4.9.5"
   }
 }

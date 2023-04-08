@@ -8,7 +8,7 @@ import { sendRequest } from './ai';
  * @param {Object} store - The Redux store.
  * @returns {Function} - A function that accepts a `next` function as its parameter which processes the next action in the chain of responsibility.
  */
-export const middleware = (store) => (next) => (action) => {
+export const middleware = (store) => (next) => async (action) => {
   const state = store.getState();
   const term = getTerminal();
 
@@ -22,9 +22,6 @@ export const middleware = (store) => (next) => (action) => {
     const input = action.data;
     if (['\r', '\n'].includes(input)) {
       store.dispatch({ type: SUBMIT_USER_INPUT, payload: state.ui.inputValue });
-      if (isAICommand(state.ui.inputValue)) {
-        return { type: 'SESSION_USER_DATA', data: 'Custom data' };
-      }
     } else {
       store.dispatch({ type: UPDATE_USER_INPUT, payload: input });
     }
@@ -46,9 +43,10 @@ export const middleware = (store) => (next) => (action) => {
   if (SEND_AI_REQUEST === action.type) {
     console.log('SEND AI REQUEST', action.payload);
     console.log('TERMINAL', term);
-    clearLine();
-    term.write('> ');
-    sendRequest(action.payload);
+
+    const result = await sendRequest(action.payload);
+
+    term.paste(result.command);
   }
 
   next(action);
