@@ -1,7 +1,7 @@
-const { getTermProps } = require('./terminal');
-const { onApp, onWindow } = require('./hooks');
-const { middleware } = require('./middleware');
-const { reduceUI } = require('./reducer');
+import { getTermProps } from './terminal';
+import { onApp, onWindow } from './hooks';
+import { middleware } from './middleware';
+import { reduceUI } from './reducer';
 
 /**
  * Exporting Hyper terminal hooks.
@@ -12,7 +12,7 @@ const { reduceUI } = require('./reducer');
  * @property {reduceUICallback} reduceUI - Function that manipulates the terminal UI state via Redux.
  * @property {getTermPropsCallback} getTermProps - Function that returns props to be spread over a terminal component.
  */
-module.exports = {
+export {
   onApp,
   onWindow,
   middleware,

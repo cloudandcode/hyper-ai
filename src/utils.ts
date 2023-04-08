@@ -5,12 +5,12 @@
 
 
 // TODO: Delete these.
-exports.mapTermsState = (state, map) => {
+export const mapTermsState = (state, map) => {
   console.log('MAP TERMS STATE', state, map);
   return map;
 };
 
-exports.decorateTerms = (Terms, { React }) => {
+export const decorateTerms = (Terms, { React }) => {
   return class extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -26,17 +26,12 @@ exports.decorateTerms = (Terms, { React }) => {
     }
 
     render() {
-      return React.createElement(
-        Terms,
-        Object.assign({}, this.props, {
-          onDecorated: this.onDecorated,
-        })
-      );
+      return <Terms {...this.props} onDecorated={this.onDecorated} />;
     }
   };
 };
 
-exports.decorateTerm = (Term, { React }) => {
+export const decorateTerm = (Term, { React }) => {
   console.log('DECORATE TERM', Term, React);
   return class extends React.Component {
     constructor(props, context) {
@@ -53,12 +48,7 @@ exports.decorateTerm = (Term, { React }) => {
     }
 
     render() {
-      return React.createElement(
-        Term,
-        Object.assign({}, this.props, {
-          onDecorated: this.onDecorated,
-        })
-      );
+      return <Term {...this.props} onDecorated={this.onDecorated} />;
     }
   };
 };

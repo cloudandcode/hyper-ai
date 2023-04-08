@@ -1,4 +1,4 @@
-// An xterm instance.
+// The current xterm instance.
 let term;
 
 /**
@@ -9,7 +9,7 @@ let term;
  * @param {Object} props - The current props of the terminal.
  * @returns {Object} - The props of the terminal.
  */
-exports.getTermProps = (uid, parentProps, props) => {
+export const getTermProps = (uid, parentProps, props) => {
   console.log('GET TERM PROPS', uid, parentProps, props);
   term = props.term;
   return props;
@@ -19,9 +19,9 @@ exports.getTermProps = (uid, parentProps, props) => {
  * Returns the current terminal object.
  * @returns {Object} - The current terminal object.
  */
-exports.getTerminal = () => term;
+export const getTerminal = () => term;
 
-exports.clearLine = () => {
+export const clearLine = () => {
   term.write('\x1b[2K\r');
 }
 
@@ -31,6 +31,6 @@ exports.clearLine = () => {
  * @param {string} input - The user input to check.
  * @returns {boolean} - `true` if the input is an AI command, `false` otherwise.
  */
-exports.isAICommand = (input) => {
+export const isAICommand = (input) => {
   return input[0] === '#';
 }

@@ -4,7 +4,7 @@
  * @param {Object} options - The app config options
  * @param {Object} options.config - The app configuration object
  */
-exports.onApp = ({ config }) => {
+export const onApp = ({ config }) => {
   console.log('HYPER-AI ON APP STARTUP');
   console.log('CONFIG', config);
 };
@@ -14,6 +14,6 @@ exports.onApp = ({ config }) => {
  *
  * @param {Object} win - The window instance.
  */
-exports.onWindow = (win) => {
+export const onWindow = (win) => {
   win.webContents.openDevTools();
 };

@@ -1,6 +1,6 @@
-const { getTerminal, isAICommand, clearLine } = require('./terminal');
-const { SESSION_USER_DATA, UPDATE_USER_INPUT, SUBMIT_USER_INPUT, SEND_AI_REQUEST } = require('./constants');
-const { sendRequest } = require('./ai');
+import { getTerminal, isAICommand, clearLine } from './terminal';
+import { SESSION_USER_DATA, UPDATE_USER_INPUT, SUBMIT_USER_INPUT, SEND_AI_REQUEST } from './constants';
+import { sendRequest } from './ai';
 
 /**
  * Middleware that intercepts and processes actions before they reach the reducer.
@@ -8,7 +8,7 @@ const { sendRequest } = require('./ai');
  * @param {Object} store - The Redux store.
  * @returns {Function} - A function that accepts a `next` function as its parameter which processes the next action in the chain of responsibility.
  */
-exports.middleware = (store) => (next) => (action) => {
+export const middleware = (store) => (next) => (action) => {
   const state = store.getState();
   const term = getTerminal();
 

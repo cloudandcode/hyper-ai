@@ -9,7 +9,7 @@
     "openai",
     "gpt"
   ],
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -24,6 +24,7 @@
     "xterm": "^5.1.0"
   },
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "eslint": "^8.37.0",
     "typescript": "^5.0.4"
   }
