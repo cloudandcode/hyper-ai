@@ -1,6 +1,4 @@
-import { getTermProps } from './terminal';
-import { onApp, onWindow } from './hooks';
-import { middleware } from './middleware';
+import { decorateTerm, onApp, onWindow } from './hooks';
 import { reduceUI } from './reducer';
 
 /**
@@ -15,7 +13,6 @@ import { reduceUI } from './reducer';
 export {
   onApp,
   onWindow,
-  middleware,
   reduceUI,
-  getTermProps
+  decorateTerm
 };

@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AI = void 0;
 const openai_1 = require("openai");
-const constants_1 = require("./constants");
-const constants_2 = require("./constants");
+const constants_1 = require("../constants");
+const risk_constant_1 = require("../constants/risk.constant");
 class AI {
     static sendRequest(context, input) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,7 +44,8 @@ class AI {
       Format: The following fields must be in perfect, valid JSON format with all strings correctly escaped
       {
         "command": a string containing only the resulting command,
-        "risk": a rating between 0 - 10 that represents a calculation of the potential risk posed to the system as a result of performing the command, where 10 is the highest risk
+        "risk": a rating between 0 - 10 that represents a calculation of the potential risk posed to the system as a result of performing the command, where 10 is the highest risk,
+        "risk_description": a string containing a description of the risk posed by the command,
         "success": a boolean value that indicates whether a resulting command was successfully determined
       }
       Response:
@@ -52,8 +53,8 @@ class AI {
     }
     static parseResponse(response) {
         const result = JSON.parse(response);
-        const risk = constants_2.RISK[result.risk];
-        result.command = risk ? `# ${risk} ${result.command}` : result.command;
+        const risk = risk_constant_1.RISK[result.risk];
+        result.command = risk ? `${risk} ${result.command}` : result.command;
         return result;
     }
 }
