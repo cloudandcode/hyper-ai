@@ -1,9 +1,9 @@
+import path from 'path';
 import { Terminal as Xterm } from 'xterm';
 import { Spinner } from './spinner.class';
 import { AI } from './ai.class';
-import { Command } from '../interfaces';
-import path from 'path';
-import { RISK, RISK_DESCRIPTION } from '../constants/risk.constant';
+import { Response } from '../interfaces';
+import { FUNNY_DESCRIPTION, RISK_DESCRIPTION } from '../constants/risk.constant';
 
 export class Terminal {
   term: Xterm;
@@ -45,6 +45,12 @@ export class Terminal {
     this.term.write(text);
   }
 
+  public writeLine(text: string): void {
+    this.clearLine();
+    this.term.write(`${text}`);
+    this.term.paste(`\r`);
+  }
+
   public showSpinner(): void {
     this.spinner = new Spinner(this);
   }
@@ -71,26 +77,39 @@ export class Terminal {
     return input[0] === '#';
   }
 
-  private async sendAIRequest(input: string): Promise<void> {
+  private async sendRequest(input: string): Promise<void> {
     try {
       this.showSpinner();
-      const result: Command = await AI.sendRequest(this.shell, input);
-      const risk = RISK_DESCRIPTION[result.risk]?.replace('%s', result.risk_description);
-
+      const response: Response = await AI.sendRequest(this.shell, input);
       this.hideSpinner();
-
-      if (risk) {
-        this.clearLine();
-        this.term.write(`${risk}`);
-        this.term.paste(`\r`);
-      }
-
-      this.paste(result.command);
+      this.writeResponse(response);
     } catch (error) {
       this.hideSpinner();
-      this.clearLine();
-      this.term.write(`\x1b[31mThere was an error executing the AI command.\x1b[0m`);
-      this.term.paste(`\r`);
+      this.writeLine(`\x1b[31mThere was an error executing the AI command.\x1b[0m`);
+    }
+  }
+
+  private writeResponse(response: Response): void {
+    const riskDescription = RISK_DESCRIPTION[response.risk]?.replace('%s', response.comment);
+    const funnyDescription = response.funny ? FUNNY_DESCRIPTION[0].replace('%s', response.funny_description) : '';
+    let comment: string;
+
+    if (!response.command) {
+      comment = funnyDescription || riskDescription;
+    } else if (riskDescription) {
+      comment = riskDescription;
+      if (response.risk >= 9) {
+        comment += '\x1b[31m Delete the notice to execute at your own risk.\x1b[0m';
+      }
+    } else if (funnyDescription) {
+      comment = funnyDescription;
+    }
+
+    if (comment) {
+      this.writeLine(`${comment}`);
+    }
+    if (response.command) {
+      this.paste(response.command);
     }
   }
 
@@ -108,7 +127,7 @@ export class Terminal {
     this.term.onKey(({ key }) => {
       if (key === '\r') {
         if (this.isAICommand(this.getInput())) {
-          this.sendAIRequest(this.getCommand());
+          this.sendRequest(this.getCommand());
         }
       }
     });

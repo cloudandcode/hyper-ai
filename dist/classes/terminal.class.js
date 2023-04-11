@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Terminal = void 0;
+const path_1 = __importDefault(require("path"));
 const spinner_class_1 = require("./spinner.class");
 const ai_class_1 = require("./ai.class");
-const path_1 = __importDefault(require("path"));
 const risk_constant_1 = require("../constants/risk.constant");
 class Terminal {
     constructor(term, shell) {
@@ -49,6 +49,11 @@ class Terminal {
     write(text) {
         this.term.write(text);
     }
+    writeLine(text) {
+        this.clearLine();
+        this.term.write(`${text}`);
+        this.term.paste(`\r`);
+    }
     showSpinner() {
         this.spinner = new spinner_class_1.Spinner(this);
     }
@@ -68,28 +73,43 @@ class Terminal {
     isAICommand(input) {
         return input[0] === '#';
     }
-    sendAIRequest(input) {
-        var _a;
+    sendRequest(input) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.showSpinner();
-                const result = yield ai_class_1.AI.sendRequest(this.shell, input);
-                const risk = (_a = risk_constant_1.RISK_DESCRIPTION[result.risk]) === null || _a === void 0 ? void 0 : _a.replace('%s', result.risk_description);
+                const response = yield ai_class_1.AI.sendRequest(this.shell, input);
                 this.hideSpinner();
-                if (risk) {
-                    this.clearLine();
-                    this.term.write(`${risk}`);
-                    this.term.paste(`\r`);
-                }
-                this.paste(result.command);
+                this.writeResponse(response);
             }
             catch (error) {
                 this.hideSpinner();
-                this.clearLine();
-                this.term.write(`\x1b[31mThere was an error executing the AI command.\x1b[0m`);
-                this.term.paste(`\r`);
+                this.writeLine(`\x1b[31mThere was an error executing the AI command.\x1b[0m`);
             }
         });
+    }
+    writeResponse(response) {
+        var _a;
+        const riskDescription = (_a = risk_constant_1.RISK_DESCRIPTION[response.risk]) === null || _a === void 0 ? void 0 : _a.replace('%s', response.comment);
+        const funnyDescription = response.funny ? risk_constant_1.FUNNY_DESCRIPTION[0].replace('%s', response.funny_description) : '';
+        let comment;
+        if (!response.command) {
+            comment = funnyDescription || riskDescription;
+        }
+        else if (riskDescription) {
+            comment = riskDescription;
+            if (response.risk >= 9) {
+                comment += '\x1b[31m Delete the notice to execute at your own risk.\x1b[0m';
+            }
+        }
+        else if (funnyDescription) {
+            comment = funnyDescription;
+        }
+        if (comment) {
+            this.writeLine(`${comment}`);
+        }
+        if (response.command) {
+            this.paste(response.command);
+        }
     }
     setShellPrompt() {
         if (!this.shellPrompt) {
@@ -103,7 +123,7 @@ class Terminal {
         this.term.onKey(({ key }) => {
             if (key === '\r') {
                 if (this.isAICommand(this.getInput())) {
-                    this.sendAIRequest(this.getCommand());
+                    this.sendRequest(this.getCommand());
                 }
             }
         });

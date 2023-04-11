@@ -1,6 +1,7 @@
-export interface Command {
+export interface Response {
   command: string;
   risk: number;
-  risk_description: string;
-  success: boolean;
+  comment: string;
+  funny: boolean;
+  funny_description: string;
 }

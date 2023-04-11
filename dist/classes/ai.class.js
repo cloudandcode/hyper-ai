@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AI = void 0;
 const openai_1 = require("openai");
+const jsonrepair_1 = require("jsonrepair");
 const constants_1 = require("../constants");
 const risk_constant_1 = require("../constants/risk.constant");
 class AI {
@@ -38,23 +39,26 @@ class AI {
     }
     static getPrompt(context, input) {
         return `
-      Request: Given the context, determine the most appropriate, safe and correct terminal command to perform the desired action
+      Request: Given the context, determine the most appropriate, safe and correct terminal command (avoiding echo statements) to perform the desired action
       Context: ${context}.
       Action: ${input}.
-      Format: The following fields must be in perfect, valid JSON format with all strings correctly escaped
+      Format: The following fields must be in perfect, valid JSON format with all characters correctly escaped
       {
-        "command": a string containing only the resulting command,
-        "risk": a rating between 0 - 10 that represents a calculation of the potential risk posed to the system as a result of performing the command, where 10 is the highest risk,
-        "risk_description": a string containing a description of the risk posed by the command,
-        "success": a boolean value that indicates whether a resulting command was successfully determined
+        "command": A string value. The resulting command.,
+        "risk": An integer value. A rating between 0 - 10 that represents a calculation of the potential risk posed to the system as a result of performing the command, where 10 is the highest risk.,
+        "comment": A string value. If risk >= 5, this must be an assessment of the risk. If no command is returned, indicate why.,
+        "funny": A boolean value. Indicates whether the original action deserves a funny response.,
+        "funny_description": A string value. If the original action deserves a funny then this should be a funny response.,
       }
       Response:
     `;
     }
     static parseResponse(response) {
-        const result = JSON.parse(response);
+        const fixed = jsonrepair_1.jsonrepair(response);
+        const result = JSON.parse(fixed);
+        const command = result.command.trim();
         const risk = risk_constant_1.RISK[result.risk];
-        result.command = risk ? `${risk} ${result.command}` : result.command;
+        result.command = risk && command ? `${risk} ${command}` : command;
         return result;
     }
 }
